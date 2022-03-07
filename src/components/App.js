@@ -1,10 +1,12 @@
 import React from 'react';
-import Frame from './Frame';
+import Header from './Header';
+import DisplayControl from './DisplayControl';
 
 function App() {
   return (
     <div className="App">
-      <Frame />
+      <Header />
+      <DisplayControl />
     </div>
   );
 }
