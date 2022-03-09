@@ -36,7 +36,7 @@ function Form(props) {
         <label style={labelStyle} for="endYear">End Year:</label>
         <input style={inputStyle} type="number" name="endYear" placeholder="End Year" defaultValue={props.endYear} />
         <label style={labelStyle} for="declutter">Declutter?</label>
-        <input type="checkbox" name="declutter" defaultChecked={props.declutter} />
+        <input style={inputStyle} type="checkbox" name="declutter" defaultChecked={props.declutter} />
         <button style={inputStyle} type="submit">Refresh</button>
       </form>
     </div>
