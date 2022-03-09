@@ -24,18 +24,19 @@ function Form(props) {
     event.preventDefault();
     const inputtedStartYear = parseInt(event.target.startYear.value);
     const inputtedEndYear = parseInt(event.target.endYear.value);
-    const declutter = event.target.declutter.value;
+    const declutter = event.target.declutter.checked;
+    console.log(declutter);
     props.formCallback(inputtedStartYear, inputtedEndYear, declutter);
   }
 
   return (
     <div style={formStyle}>
       <form onSubmit={formSubmissionHandler}>
-        <label style={labelStyle} for="startYear">Start Year:</label>
+        <label style={labelStyle} htmlFor="startYear">Start Year:</label>
         <input style={inputStyle} type="number" name="startYear" placeholder="Start Year" defaultValue={props.startYear} />
-        <label style={labelStyle} for="endYear">End Year:</label>
+        <label style={labelStyle} htmlFor="endYear">End Year:</label>
         <input style={inputStyle} type="number" name="endYear" placeholder="End Year" defaultValue={props.endYear} />
-        <label style={labelStyle} for="declutter">Declutter?</label>
+        <label style={labelStyle} htmlFor="declutter">Declutter?</label>
         <input style={inputStyle} type="checkbox" name="declutter" defaultChecked={props.declutter} />
         <button style={inputStyle} type="submit">Refresh</button>
       </form>
