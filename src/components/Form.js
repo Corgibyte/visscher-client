@@ -25,7 +25,6 @@ function Form(props) {
     const inputtedStartYear = parseInt(event.target.startYear.value);
     const inputtedEndYear = parseInt(event.target.endYear.value);
     const declutter = event.target.declutter.checked;
-    console.log(declutter);
     props.formCallback(inputtedStartYear, inputtedEndYear, declutter);
   }
 
