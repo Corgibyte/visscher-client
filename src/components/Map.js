@@ -9,6 +9,7 @@ import * as ol from 'ol';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 import PropTypes from 'prop-types';
+import Form from './Form';
 
 const mapStyle = {
   minWidth: "600px",
@@ -37,16 +38,26 @@ const textStyle = (feature, resolution) => {
   });
 }
 
-function Map(props) {
+function Map() {
   const mapRef = useRef();
   const [map, setMap] = useState(null);
   const [isLoading, toggleLoading] = useState(true);
   const [error, toggleError] = useState(false);
+  const [startYear, setStartYear] = useState(1444);
+  const [endYear, setEndYear] = useState(1812);
+
+  const formCallback = (startYear, endYear) => {
+    setStartYear(startYear);
+    setEndYear(endYear);
+    map.setTarget(null);
+    setMap(null);
+    toggleLoading(true);
+  }
 
   useEffect(() => {
     // API Helper
     const runFetch = async () => {
-      fetch(`https://visscherapi.azurewebsites.net/api/Battles?startYear=${props.startYear}&endYear=${props.endYear}`)
+      fetch(`https://visscherapi.azurewebsites.net/api/Battles?startYear=${startYear}&endYear=${endYear}`)
         .then(response => response.json())
         .then(
           (jsonifiedResponse) => {
@@ -88,9 +99,10 @@ function Map(props) {
       mapObject.setTarget(mapRef.current);
       setMap(mapObject);
     }
-    runFetch();
-    return () => map.setTarget(undefined);
-  }, []);
+    if (map == null) {
+      runFetch();
+    }
+  }, [map, startYear, endYear]);
 
   const chooseRender = () => {
     if (isLoading) {
@@ -101,15 +113,15 @@ function Map(props) {
   }
 
   return (
-    <div ref={mapRef} style={mapStyle}>
-      {chooseRender()}
-    </div>
+    <React.Fragment>
+      <div ref={mapRef} style={mapStyle} className="ol-layer">
+        {chooseRender()}
+      </div>
+      <Form formCallback={formCallback}
+        startYear={startYear}
+        endYear={endYear} />
+    </React.Fragment>
   );
-}
-
-Map.propTypes = {
-  startYear: PropTypes.number,
-  endYear: PropTypes.number
 }
 
 export default Map;
