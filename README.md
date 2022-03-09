@@ -6,6 +6,8 @@ By Hannah Young
 
 This web application maps data from the [VisscherAPI](https://github.com/Corgibyte/visscher/) using [OpenLayers 6](https://openlayers.org/).
 
+Current version can be viewed [here](https://visscherclient.azurewebsites.net/).
+
 ### Technologies Used
 
 - JavaScript
