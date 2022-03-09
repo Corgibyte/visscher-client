@@ -24,7 +24,8 @@ function Form(props) {
     event.preventDefault();
     const inputtedStartYear = parseInt(event.target.startYear.value);
     const inputtedEndYear = parseInt(event.target.endYear.value);
-    props.formCallback(inputtedStartYear, inputtedEndYear);
+    const declutter = event.target.declutter.value;
+    props.formCallback(inputtedStartYear, inputtedEndYear, declutter);
   }
 
   return (
@@ -34,6 +35,8 @@ function Form(props) {
         <input style={inputStyle} type="number" name="startYear" placeholder="Start Year" defaultValue={props.startYear} />
         <label style={labelStyle} for="endYear">End Year:</label>
         <input style={inputStyle} type="number" name="endYear" placeholder="End Year" defaultValue={props.endYear} />
+        <label style={labelStyle} for="declutter">Declutter?</label>
+        <input type="checkbox" name="declutter" defaultChecked={props.declutter} />
         <button style={inputStyle} type="submit">Refresh</button>
       </form>
     </div>
@@ -43,7 +46,8 @@ function Form(props) {
 Form.propTypes = {
   formCallback: PropTypes.func,
   startYear: PropTypes.number,
-  endYear: PropTypes.number
+  endYear: PropTypes.number,
+  declutter: PropTypes.bool
 };
 
 export default Form;

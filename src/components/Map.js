@@ -8,7 +8,6 @@ import { fromLonLat } from 'ol/proj';
 import * as ol from 'ol';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
-import PropTypes from 'prop-types';
 import Form from './Form';
 
 const mapStyle = {
@@ -51,10 +50,13 @@ function Map() {
   const [error, toggleError] = useState(false);
   const [startYear, setStartYear] = useState(1444);
   const [endYear, setEndYear] = useState(1812);
+  const [declutter, setDeclutter] = useState(false);
+  const [view, setView] = useState(new ol.View({ center: [0, 0], zoom: 2 }));
 
-  const formCallback = (startYear, endYear) => {
+  const formCallback = (startYear, endYear, declutter) => {
     setStartYear(startYear);
     setEndYear(endYear);
+    setDeclutter(declutter);
     map.setTarget(null);
     setMap(null);
     toggleLoading(true);
@@ -84,14 +86,11 @@ function Map() {
       const vectorLayer = new VectorLayer({
         source: vectorSource,
         style: textStyle,
-        // declutter: true
+        declutter: declutter
       });
 
       let options = {
-        view: new ol.View({
-          center: [0, 0],
-          zoom: 2
-        }),
+        view: view,
         layers: [
           new TileLayer({
             source: new XYZ({
@@ -125,7 +124,8 @@ function Map() {
       </div>
       <Form formCallback={formCallback}
         startYear={startYear}
-        endYear={endYear} />
+        endYear={endYear}
+        declutter={declutter} />
     </React.Fragment>
   );
 }
