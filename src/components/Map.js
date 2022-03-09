@@ -8,12 +8,13 @@ import { fromLonLat } from 'ol/proj';
 import * as ol from 'ol';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
+import PropTypes from 'prop-types';
 
 const mapStyle = {
   minWidth: "600px",
   minHeight: "600px",
   width: "100%",
-  height: "900px"
+  height: "800px"
 };
 
 const textStyle = (feature, resolution) => {
@@ -36,7 +37,7 @@ const textStyle = (feature, resolution) => {
   });
 }
 
-function Map() {
+function Map(props) {
   const mapRef = useRef();
   const [map, setMap] = useState(null);
   const [isLoading, toggleLoading] = useState(true);
@@ -45,7 +46,7 @@ function Map() {
   useEffect(() => {
     // API Helper
     const runFetch = async () => {
-      fetch('https://visscherapi.azurewebsites.net/api/Battles?startYear=9999&endYear=9999')
+      fetch(`https://visscherapi.azurewebsites.net/api/Battles?startYear=${props.startYear}&endYear=${props.endYear}`)
         .then(response => response.json())
         .then(
           (jsonifiedResponse) => {
@@ -104,6 +105,11 @@ function Map() {
       {chooseRender()}
     </div>
   );
+}
+
+Map.propTypes = {
+  startYear: PropTypes.number,
+  endYear: PropTypes.number
 }
 
 export default Map;
