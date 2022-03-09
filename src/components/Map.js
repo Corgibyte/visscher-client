@@ -13,15 +13,15 @@ const mapStyle = {
   minWidth: "600px",
   minHeight: "600px",
   width: "100%",
-  height: "500px"
+  height: "900px"
 };
 
-const textStyle = (feature) => {
+const textStyle = (feature, resolution) => {
   return new Style({
     image: new Circle({
       radius: 10,
-      fill: new Fill({ color: 'rgba(255, 0, 0, 0.1)' }),
-      stroke: new Stroke({ color: 'red', width: 1 })
+      fill: new Fill({ color: 'rgba(0, 0, 255, 0.1)' }),
+      stroke: new Stroke({ color: 'blue', width: 1 })
     }),
     text: new Text({
       font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
@@ -29,7 +29,9 @@ const textStyle = (feature) => {
       fill: new Fill({
         color: 'black',
       }),
-      text: feature.get('name')
+      offsetY: -15,
+      text: feature.get('name'),
+      overflow: true
     }),
   });
 }
@@ -43,7 +45,7 @@ function Map() {
   useEffect(() => {
     // API Helper
     const runFetch = async () => {
-      fetch('http://localhost:5000/api/Battles?startYear=9999&endYear=9999')
+      fetch('https://visscherapi.azurewebsites.net/api/Battles?startYear=9999&endYear=9999')
         .then(response => response.json())
         .then(
           (jsonifiedResponse) => {
@@ -64,7 +66,7 @@ function Map() {
       const vectorLayer = new VectorLayer({
         source: vectorSource,
         style: textStyle,
-        declutter: true
+        // declutter: true
       });
 
       let options = {
