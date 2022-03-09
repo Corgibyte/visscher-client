@@ -13,10 +13,16 @@ import Form from './Form';
 
 const mapStyle = {
   minWidth: "600px",
-  minHeight: "600px",
   width: "100%",
-  height: "800px"
+  minHeight: "700px",
+  height: "700px",
+  border: "solid black 1px",
 };
+
+const loadStyle = {
+  fontSize: "60px",
+  textAlign: "center"
+}
 
 const textStyle = (feature, resolution) => {
   return new Style({
@@ -106,7 +112,7 @@ function Map() {
 
   const chooseRender = () => {
     if (isLoading) {
-      return <p>Loading...</p>;
+      return <p style={loadStyle}>Loading...</p>;
     } else if (error) {
       return <p>Error!</p>
     }
