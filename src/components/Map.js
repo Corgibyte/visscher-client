@@ -24,11 +24,13 @@ const loadStyle = {
 }
 
 const textStyle = (feature, resolution) => {
+  const colorCode = feature.get('EventId') >= 5000 ? 'rgba(255, 0, 0, 0.1)' : 'rgba(0, 0, 255, 0.1)';
+  const color = feature.get('EventId') >= 5000 ? 'red' : 'blue';
   return new Style({
     image: new Circle({
       radius: 10,
-      fill: new Fill({ color: 'rgba(0, 0, 255, 0.1)' }),
-      stroke: new Stroke({ color: 'blue', width: 1 })
+      fill: new Fill({ color: colorCode }),
+      stroke: new Stroke({ color: color, width: 1 })
     }),
     text: new Text({
       font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
@@ -52,25 +54,31 @@ function Map() {
   const [endYear, setEndYear] = useState(1812);
   const [declutter, setDeclutter] = useState(false);
   const [view, setView] = useState(new ol.View({ center: [0, 0], zoom: 2 }));
+  const [showBattles, setBattleShow] = useState(true);
+  const [showEarthquakes, setEarthquakeShow] = useState(true);
 
-  const formCallback = (startYear, endYear, declutter) => {
+  const formCallback = (startYear, endYear, declutter, showBattles, showEarthquakes) => {
     setStartYear(startYear);
     setEndYear(endYear);
     setDeclutter(declutter);
+    setBattleShow(showBattles);
+    setEarthquakeShow(showEarthquakes);
     map.setTarget(null);
     setMap(null);
     toggleLoading(true);
   }
 
   useEffect(() => {
+    const mapData = [];
     // API Helper
-    const runFetch = async () => {
-      fetch(`https://visscherapi.azurewebsites.net/api/Battles?startYear=${startYear}&endYear=${endYear}`)
-        .then(response => response.json())
+    const runFetch = async (category) => {
+      return fetch(`https://visscherapi.azurewebsites.net/api/${category}?startYear=${startYear}&endYear=${endYear}`)
+        .then((response) => {
+          return response.json();
+        })
         .then(
           (jsonifiedResponse) => {
-            createMap(jsonifiedResponse);
-            toggleLoading(false);
+            return jsonifiedResponse;
           })
         .catch((error) => {
           toggleError(true);
@@ -79,7 +87,8 @@ function Map() {
     const createMap = (jsonData) => {
       var features = jsonData.map(x => new Feature({
         geometry: new Point(fromLonLat(x.coordinates)),
-        name: x.Name
+        name: x.Name,
+        EventId: x.EventId
       }));
       const vectorSource = new VectorSource();
       vectorSource.addFeatures(features);
@@ -105,7 +114,19 @@ function Map() {
       setMap(mapObject);
     }
     if (map == null) {
-      runFetch();
+      let mapData = [];
+      runFetch("Battles").then((result) => {
+        if (showBattles) {
+          mapData = [...result];
+        }
+        runFetch("Earthquakes").then((result) => {
+          if (showEarthquakes) {
+            mapData = [...mapData, ...result];
+          }
+          toggleLoading(false);
+          createMap(mapData);
+        });
+      });
     }
   }, [map, startYear, endYear]);
 
@@ -125,7 +146,9 @@ function Map() {
       <Form formCallback={formCallback}
         startYear={startYear}
         endYear={endYear}
-        declutter={declutter} />
+        declutter={declutter}
+        showBattles={showBattles}
+        showEarthquakes={showEarthquakes} />
     </React.Fragment>
   );
 }

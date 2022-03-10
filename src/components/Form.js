@@ -25,7 +25,9 @@ function Form(props) {
     const inputtedStartYear = parseInt(event.target.startYear.value);
     const inputtedEndYear = parseInt(event.target.endYear.value);
     const declutter = event.target.declutter.checked;
-    props.formCallback(inputtedStartYear, inputtedEndYear, declutter);
+    const showBattles = event.target.showBattles.checked;
+    const showEarthquakes = event.target.showEarthquakes.checked;
+    props.formCallback(inputtedStartYear, inputtedEndYear, declutter, showBattles, showEarthquakes);
   }
 
   return (
@@ -37,6 +39,10 @@ function Form(props) {
         <input style={inputStyle} type="number" name="endYear" placeholder="End Year" defaultValue={props.endYear} />
         <label style={labelStyle} htmlFor="declutter">Declutter?</label>
         <input style={inputStyle} type="checkbox" name="declutter" defaultChecked={props.declutter} />
+        <label style={labelStyle} htmlFor="showBattles">Show battles?</label>
+        <input style={inputStyle} type="checkbox" name="showBattles" defaultChecked={props.showBattles} />
+        <label style={labelStyle} htmlFor="showEarthquakes">Show earthquakes?</label>
+        <input style={inputStyle} type="checkbox" name="showEarthquakes" defaultChecked={props.showEarthquakes} />
         <button style={inputStyle} type="submit">Refresh</button>
       </form>
     </div>
@@ -47,7 +53,9 @@ Form.propTypes = {
   formCallback: PropTypes.func,
   startYear: PropTypes.number,
   endYear: PropTypes.number,
-  declutter: PropTypes.bool
+  declutter: PropTypes.bool,
+  showBattles: PropTypes.bool,
+  showEarthquakes: PropTypes.bool
 };
 
 export default Form;
